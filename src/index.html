@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>Desktop Capture App</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+    crossorigin="anonymous"
+  >
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+  >
+  <style>
+    .titlebar {
+        -webkit-user-select: none;
+        -webkit-app-region: drag;
+    }
+  </style>
+</head>
+<body>
+  <div
+    class="text-center"
+    id="loader"
+    hidden="hidden"
+  >
+    <div
+      class="spinner-border"
+      style="width: 3rem; height: 3rem;"
+      role="status"
+    >
+      <span class="sr-only"></span>
+    </div>
+    Saving files...
+  </div>
+  <div
+    class="container text-center"
+  >
+    <video
+      id="video"
+      style="width: 1000px; height: 600px;"
+      poster="images/dummyBackground.jpg"
+    ></video>
+    <div
+      class="col-auto"
+    >
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#settingsModal"
+      >
+        Settings
+      </button>
+      <button
+        id="mic"
+        class="btn btn-success"
+      >
+        <i
+          class="bi bi-mic"
+          id="micIcon"
+        ></i>
+      </button>
+      <select
+        id="selector"
+        class="form-select form-select-sm mb-3"
+        style="width: 150px; display: inline-block;"
+      ></select>
+      <button
+        class="btn btn-primary"
+        id="toggleRecord"
+        style="display: inline-block"
+      >
+        Start recording
+      </button>
+    </div>
+    <br>
+    <div>
+      <strong
+        id="errorMessage"
+      >
+      </strong>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="settingsModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="settingsModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="settingsModalLabel">Settings</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  Recording settings
+                </button>
+              </h2>
+              <div>
+                <div
+                  id="collapseOne"
+                  class="accordion-collapse collapse show"
+                  aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    <form>
+                      <div class="mb-6 row">
+                        <div class="input-group mb-3">
+                          <label for="recordingPath" class="col-sm-2 col-form-label">
+                            <strong>
+                              Recording path
+                            </strong>
+                          </label>
+                        </div>
+                        <div class="col-sm-10">
+                          <div class="input-group mb-3">
+                            <input
+                              id="recordingPath"
+                              class="form-control"
+                            >
+                            <button
+                              class="input-group-text"
+                              id="changePath"
+                            >
+                              Change
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mb-6 row">
+                        <label for="recordingFormat" class="col-sm-2 col-form-label">
+                          <strong>
+                            Recording format
+                          </strong>
+                        </label>
+                        <div class="col-sm-10">
+                          <select
+                            class="form-select form-select-sm mb-3"
+                            id="recordingFormat"
+                          >
+                            <option>webm</option>
+                            <option>mp4</option>
+                            <option>avi</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="mb-6 row">
+                        <div>
+                          <label
+                            class="form-check-label"
+                            for="separateAudio">
+                            <strong>Separate audio and video</strong>
+                          </label>
+                          <input
+                            class="form-check-input"
+                            type="checkbox" value=""
+                            id="separateAudio"
+                          >
+                        </div>
+                      </div>
+
+                      <div class="mb-6 row">
+                        <div>
+                          <label
+                            class="form-check-label"
+                            for="whatToRecord">
+                            <strong>What to record?</strong>
+                          </label>
+                          <div class="col-sm-10">
+                            <select
+                              class="form-select form-select-sm mb-3"
+                              id="whatToRecord"
+                            >
+                              <option>Only Audio</option>
+                              <option>Only Video</option>
+                              <option>Audio & Video</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mb-6 row">
+                        <div>
+                          <label
+                            class="form-check-label"
+                            for="resolution">
+                            <strong>Output Resolution</strong>
+                          </label>
+                          <div class="col-sm-10">
+                            <select
+                              class="form-select form-select-sm mb-3"
+                              id="resolution"
+                            >
+                              <option>1920x1080</option>
+                              <option>640x480</option>
+                              <option>320x240</option>
+                              <option>320x200</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="renderer.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"
+  ></script>
+</body>
+</html>
