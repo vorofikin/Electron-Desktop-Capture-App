@@ -20,7 +20,7 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
   win.loadFile(path.join("src", "index.html"));
   win.removeMenu();
   createRuntimeConfig();
@@ -146,10 +146,9 @@ ipcMain.handle("error-notification", (event, msg) => {
 });
 
 const getConfig = () => {
-  const config = JSON.parse(
+  return JSON.parse(
     fs.readFileSync(path.join(__dirname, "runtime_config.json"), {
       encoding: "utf-8",
     })
   );
-  return config;
 };
