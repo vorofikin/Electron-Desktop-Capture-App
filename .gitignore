@@ -2,3 +2,4 @@ node_modules
 out
 !/src/worker.js
 runtime_config.json
+.idea
